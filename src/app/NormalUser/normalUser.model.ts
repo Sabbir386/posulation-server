@@ -62,7 +62,8 @@ const NormalUserSchema = new Schema<TNormalUser, NormalUserModel>(
       required: [true, 'Email is required'],
       unique: true,
     },
-    tenantId: { type: String, required: true, index: true },
+   tenantId: { type: String, required: true, unique: true, index: true },
+
     contactNo: { type: String },
     emergencyContactNo: {
       type: String,

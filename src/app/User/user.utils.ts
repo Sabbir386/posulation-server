@@ -70,8 +70,34 @@ export const generateAdvertiserId = async (): Promise<string> => {
   return `AD-${incrementId}`;
 };
 
+const TENANT_PREFIX = "t-";
+const TENANT_PAD = 4;
+const TENANT_START = 2; // first should be t-0002
+
+// safest: parse numeric part, ignore junk like "t-default"
+export const getLastTenantNumberFromUsers = async (): Promise<number | null> => {
+  const last = await User.findOne(
+    { tenantId: { $regex: /^t-\d{4}$/ } }, // only t-0002 format
+    { tenantId: 1, _id: 0 }
+  )
+    .sort({ tenantId: -1 }) // works because fixed-width padded (t-0002)
+    .lean();
+
+  if (!last?.tenantId) return null;
+
+  const n = Number(last.tenantId.replace(TENANT_PREFIX, ""));
+  return Number.isFinite(n) ? n : null;
+};
+
+ const generateTenantIdFromUsers = async (): Promise<string> => {
+  const lastNo = await getLastTenantNumberFromUsers();
+  const nextNo = (lastNo ?? (TENANT_START - 1)) + 1; // null => 2
+
+  return `${TENANT_PREFIX}${String(nextNo).padStart(TENANT_PAD, "0")}`;
+};
 // Ensure all functions are properly exported
 export {
   generateUserId as generateid,
-  
+  generateTenantIdFromUsers,
 };
+

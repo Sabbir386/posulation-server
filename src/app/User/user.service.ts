@@ -14,6 +14,7 @@ import {
   generateAdminId,
   generateAdvertiserId,
   generateid,
+  generateTenantIdFromUsers,
 } from './user.utils';
 import { sendImageToCloudinary } from '../utilis/sendImageToCloudinary';
 import { NormalUser } from '../NormalUser/normalUser.model';
@@ -31,7 +32,10 @@ const createUserIntoDb = async (
   userData.role = 'user';
   userData.isDeleted = false;
   userData.email = payload.email;
-  userData.tenantId = payload.tenantId ?? "t-default";
+
+  // ✅ NEW: generate tenantId from last user (t-0002 -> t-0003 -> ...)
+  userData.tenantId = payload.tenantId ?? (await generateTenantIdFromUsers());
+  payload.tenantId = userData.tenantId;
 
   userData.isVerified = false; // Set user verification status to false
 
@@ -97,17 +101,44 @@ const createUserIntoDb = async (
       payload.profileImg = secure_url as string;
     }
 
-    // Create User document
-    const newUser = await User.create([userData], { session });
-    if (!newUser.length) throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create User');
+    // ✅ NEW: retry loop to avoid duplicate tenantId collision under concurrent requests
+    let newUser: any[] = [];
+    let newNormalUser: any[] = [];
 
-    // Create NormalUser document
-    payload.id = newUser[0].id;
-    payload.user = newUser[0]._id;
-    payload.refferCount = 0; // Initialize new user's refferCount to 0
-    const newNormalUser = await NormalUser.create([payload], { session });
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        // On retry, regenerate tenantId
+        if (attempt > 0) {
+          userData.tenantId = await generateTenantIdFromUsers();
+          payload.tenantId = userData.tenantId;
+        }
 
-    if (!newNormalUser.length) throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create NormalUser');
+        // Create User document
+        newUser = await User.create([userData], { session });
+        if (!newUser.length) throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create User');
+
+        // Create NormalUser document
+        payload.id = newUser[0].id;
+        payload.user = newUser[0]._id;
+        payload.refferCount = 0; // Initialize new user's refferCount to 0
+
+        newNormalUser = await NormalUser.create([payload], { session });
+        if (!newNormalUser.length) throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create NormalUser');
+
+        break; // ✅ success
+      } catch (err: any) {
+        // Duplicate tenantId -> retry
+        if (err?.code === 11000 && err?.keyPattern?.tenantId) {
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    if (!newNormalUser.length) {
+      throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Could not generate unique tenantId');
+    }
+
     // Generate a verification token
     const token = crypto.randomBytes(32).toString('hex');
     const verificationUrl = `${process.env.APP_URL}/verify-email?token=${token}`;
@@ -119,9 +150,6 @@ const createUserIntoDb = async (
 
     // Send verification email
     await sendVerificationEmail(userData.email, verificationUrl);
-
-
-
 
     // Commit the transaction
     await session.commitTransaction();

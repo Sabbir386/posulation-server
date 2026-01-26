@@ -24,7 +24,8 @@ const userSchema = new Schema<TUser, UserModel>(
       default: 0,
     },
     email: { type: String, required: true, unique: true },
-    tenantId: { type: String, required: true, index: true },
+    tenantId: { type: String, required: true, unique: true, index: true },
+
     password: { type: String, required: true, select: false },
     needsPasswordChange: {
       type: Boolean,
