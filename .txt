@@ -1,0 +1,117 @@
+step -1 :
+At first create project[only project name folder] then open it vs code [code .]
+
+step -2 :
+Open terminal then initialize package file 
+  command - npm init -y 
+
+step -3 : install 
+
+   mongoose,cors,typescript,express,dotenv
+ 
+   npm install express,npm install mongoose --save, npm install cors,npm install -D typescript,npm install dotenv --save
+
+step -4 : initialize typescript json file for typescript
+ command -> tsc -init
+
+ after - open tsconfig ,
+ -- change rootDir directory : "rootDir": "./src",
+ -- change outDir directory  : "outDir": "./dist",   
+
+step 4 : create a folder [src]-filename[app.ts]
+
+step 5 : open package.json 
+         added script "build":"tsc"   for typescript file convert javascript
+         for file run - > node dist\app.js
+         -- separate server part from app.ts to server.ts[different file]
+
+
+step -6 : connect mongodb to server.ts file 
+          npm install mongodb
+          create a file [.env] 
+          PORT:5000
+	  DATABASE_URL:
+	  then go to database access create access name then change username and password section on .env file
+
+
+step -6 : create a folder [app] then create a folder into app foler [config] then create a file [index.ts] 
+
+
+         import dotenv from 'dotenv'
+         import path from 'path';
+         install n- npm i --save-dev @types/node
+         dotenv.config({path: path.join((process.cwd(),'.env'))})
+	 export default {
+         port:process.env.PORT,
+         database_url:process.env.DATABASE_URL,
+         }
+
+step -6 : npm i --save-dev @types/express for app.ts
+          npm i --save-dev @types/cors
+
+          parsers - app.use(express.json());
+                    app.use(cors());
+
+
+step - 7 : typescript eslint prettier setup- >
+           added two file on tsConfig.json file on top -
+           "include": ["src"], // which files to compile
+           "exclude": ["node_modules"], // which files to skip
+
+           then -> install - npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
+           then ->   npx eslint --init
+	   create a file on root -[eslintignore ]
+          [ node_modules
+           dist ] added this on eslintignore
+
+           after added  script :
+          "lint": "eslint src --ignore-path .eslintignore --ext .js,.ts"
+           for fint problem eslint [ command line]: npx eslint src .
+           or npm run lint -command
+
+step -8 : added on script on [package.json]
+          "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+          "start:prod": "node ./dist/server.js",
+          "build": "tsc",
+          "lint": "eslint src --ignore-path .eslintignore --ext .ts",
+          "lint:fix": "npx eslint src --fix",
+          "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
+          "prettier:fix": "npx prettier --write src",
+          "test": "echo \"Error: no test specified\" && exit 1"
+
+step -9 : added this rules on [eslinrc.json] file
+          "no-unused-vars": "error",
+          "no-unused-expressions": "error",
+          "prefer-const": "error",
+          "no-console": "warn",
+          "no-undef": "error"
+
+          create a varibale after rules ->
+          "globals": { "process": "readonly" }
+
+
+step 10 : setup prettier 
+          -> npm install --save-dev prettier
+
+          create file on root -> .prettierrc.json
+          added this {
+          "semi": true,
+          "singleQuote": true
+          }
+
+         then go to settings on vs code sttings.json
+         "editor.defaultFormatter": "esbenp.prettier-vscode",
+         "editor.formatOnSave": true,
+
+         install another package ->
+         npm install --save-dev eslint-config-prettier
+         after replace this file on [eslinrc.json]
+         "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+
+
+step -11 : .gitignore on root [create]
+            and finall install -> npm i ts-node-dev --save-dev
+
+           
+           
+
