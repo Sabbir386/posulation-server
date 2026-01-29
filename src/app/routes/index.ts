@@ -48,7 +48,7 @@ const moduleRoutes = [
     route: CategoryRoutes,
   },
   {
-    path: "/subcategory",
+    path: "/sub-category",
     route: SubCategoryRoutes,
   },
 ];

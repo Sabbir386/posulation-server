@@ -7,7 +7,9 @@ import sendResponse from "../utilis/sendResponse";
 
 export const CategoryController = {
   create: catchAsync(async (req, res) => {
+   
     const tenantId = resolveTenantId(req);
+    //  console.log("tenan:", tenantId);
     const result = await CategoryService.createIntoDB(req.body, req.user, tenantId);
 
     sendResponse(res, {
