@@ -8,6 +8,10 @@ import { SupplierRoutes } from '../Supplier/supplier.routes';
 import { ProductRoutes } from '../Product/product.routes';
 import { CategoryRoutes } from '../Category/category.routes';
 import { SubCategoryRoutes } from '../SubCategory/subCategory.routes';
+import { BrandRoutes } from '../Brand/brand.routes';
+import { UnitRoutes } from '../Unit/unit.routes';
+import { VariantAttributeRoutes } from '../VariantAttribute/variantAttribute.routes';
+import { WarrantyRoutes } from '../Warranties/warranty.routes';
 const router = Router();
 const moduleRoutes = [
   {
@@ -50,6 +54,23 @@ const moduleRoutes = [
   {
     path: "/sub-category",
     route: SubCategoryRoutes,
+  },
+  {
+    path: "/brand",
+    route: BrandRoutes,
+  },
+  {
+    path: "/unit",
+    route: UnitRoutes,
+  },
+  {
+    path: "/variant-attribute",
+    route: VariantAttributeRoutes,
+  },
+  {
+    path: "/warranty",
+    route: WarrantyRoutes
+    ,
   },
 ];
 
