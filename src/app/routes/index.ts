@@ -5,13 +5,16 @@ import { AuthRoutes } from '../Auth/auth.route';
 import { NormalUserRoutes } from '../NormalUser/normalUser.route';
 import { TenantRoutes } from '../Tenant/tenant.route';
 import { SupplierRoutes } from '../Supplier/supplier.routes';
-import { ProductRoutes } from '../Product/product.routes';
+
 import { CategoryRoutes } from '../Category/category.routes';
 import { SubCategoryRoutes } from '../SubCategory/subCategory.routes';
 import { BrandRoutes } from '../Brand/brand.routes';
 import { UnitRoutes } from '../Unit/unit.routes';
 import { VariantAttributeRoutes } from '../VariantAttribute/variantAttribute.routes';
 import { WarrantyRoutes } from '../Warranties/warranty.routes';
+import { StoreRoutes } from '../Store/store.routes';
+import { WarehouseRoutes } from '../Warehouse/warehouse.routes';
+import { ProductRoutes } from '../Product/product.routes';
 const router = Router();
 const moduleRoutes = [
   {
@@ -39,10 +42,7 @@ const moduleRoutes = [
     path: "/supplier",
     route: SupplierRoutes,
   },
-  {
-    path: "/product",
-    route: ProductRoutes,
-  },
+  
   {
     path: "/category",
     route: CategoryRoutes,
@@ -70,6 +70,21 @@ const moduleRoutes = [
   {
     path: "/warranty",
     route: WarrantyRoutes
+    ,
+  },
+  {
+    path: "/store",
+    route: StoreRoutes
+    ,
+  },
+  {
+    path: "/warehouse",
+    route: WarehouseRoutes
+    ,
+  },
+  {
+    path: "/product",
+    route: ProductRoutes
     ,
   },
 ];

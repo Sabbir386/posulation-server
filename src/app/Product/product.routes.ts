@@ -1,43 +1,46 @@
-import express from "express";
-import { ProductController } from "./product.controller";
+import { Router } from "express";
 import auth from "../middleware/auth";
 import validateRequest from "../middleware/validateRequest";
-import { createProductValidation, updateProductValidation } from "./product.validation";
 import { USER_ROLE } from "../User/user.constant";
 
-const router = express.Router();
+import { ProductController } from "./product.controller";
+import { createProductSchema, updateProductSchema, productIdParamSchema, getProductListQuerySchema } from "./product.validation";
 
-// Admin & superAdmin can manage products
+const router = Router();
+
 router.post(
-    "/",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-    validateRequest(createProductValidation),
-    ProductController.createProduct
+  "/",
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(createProductSchema),
+  ProductController.create
 );
 
 router.get(
-    "/",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-    ProductController.getAllProducts
+  "/",
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(getProductListQuerySchema),
+  ProductController.getAll
 );
 
 router.get(
-    "/:productId",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-    ProductController.getProduct
+  "/:id",
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(productIdParamSchema),
+  ProductController.getSingle
 );
 
 router.patch(
-    "/:productId",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-    validateRequest(updateProductValidation),
-    ProductController.updateProduct
+  "/:id",
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(updateProductSchema),
+  ProductController.update
 );
 
 router.delete(
-    "/:productId",
-    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-    ProductController.deleteProduct
+  "/:id",
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(productIdParamSchema),
+  ProductController.remove
 );
 
 export const ProductRoutes = router;
