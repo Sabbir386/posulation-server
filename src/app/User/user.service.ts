@@ -79,14 +79,14 @@ const createUserIntoDb = async (
     userData.referredBy = payload.referredBy;
 
     // Check if the device fingerprint is already registered
-    const existingUserByFingerprint = await NormalUser.findOne({ deviceFingerprint: payload.deviceFingerprint }).session(session);
+    // const existingUserByFingerprint = await NormalUser.findOne({ deviceFingerprint: payload.deviceFingerprint }).session(session);
 
-    if (existingUserByFingerprint) {
-      throw new AppError(httpStatus.CONFLICT, 'This device is already associated with an account.');
-    }
+    // if (existingUserByFingerprint) {
+    //   throw new AppError(httpStatus.CONFLICT, 'This device is already associated with an account.');
+    // }
 
-    // Ensure the fingerprint is added to the payload
-    payload.deviceFingerprint = payload.deviceFingerprint;
+    // // Ensure the fingerprint is added to the payload
+    // payload.deviceFingerprint = payload.deviceFingerprint;
 
     // Handle image upload if file is provided
     if (file) {

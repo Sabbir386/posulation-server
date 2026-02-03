@@ -21,6 +21,7 @@ const NormalUserSchema = new Schema<TNormalUser, NormalUserModel>(
     },
     ip: {
       type: String,
+      required: [false, 'IP address is optional'],
       // unique: true,
       // sparse: true,
     },
@@ -31,8 +32,9 @@ const NormalUserSchema = new Schema<TNormalUser, NormalUserModel>(
     },
     deviceFingerprint: {
       type: String,
-      unique: true, // Ensure it's unique across users
-      sparse: true, // Allow null values for legacy users
+      required: [false, 'Device fingerprint is  optional'],
+      // unique: true, // Ensure it's unique across users
+      // sparse: true, // Allow null values for legacy users
     },
     
     country: {

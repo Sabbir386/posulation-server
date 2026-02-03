@@ -9,9 +9,9 @@ export const createNormalUserValidationSchema = z.object({
       gender: z.enum([...Gender] as [string, ...string[]]).optional(),
       dateOfBirth: z.string().optional(),
       email: z.string().email(),
-      ip: z.string(),
+      ip: z.string().optional(),
       device: z.string().optional(),
-      deviceFingerprint: z.string().min(1), // Required and must be a non-empty string
+      deviceFingerprint: z.string().min(1).optional(), // Required and must be a non-empty string
       country: z.string().optional(),
       contactNo: z.string().optional(),
       emergencyContactNo: z.string().optional(),
